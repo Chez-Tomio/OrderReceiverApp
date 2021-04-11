@@ -1,0 +1,43 @@
+{
+    "name": "@chez-tomio/order-receiver-app",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "android": "react-native run-android",
+        "ios": "react-native run-ios",
+        "start": "react-native start",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "prepare": "husky install"
+    },
+    "dependencies": {
+        "@react-native-async-storage/async-storage": "^1.15.2",
+        "@react-native-picker/picker": "^1.14.0",
+        "expo-keep-awake": "^9.0.0",
+        "formik": "^2.2.6",
+        "libphonenumber-js": "^1.9.16",
+        "react": "17.0.1",
+        "react-native": "0.64.0",
+        "react-native-collapsible": "^1.5.3",
+        "react-native-star-io10": "^1.0.0",
+        "react-native-unimodules": "^0.13.2",
+        "rn-eventsource-reborn": "^1.0.5"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.12.9",
+        "@babel/runtime": "^7.12.5",
+        "@commitlint/cli": "^12.1.1",
+        "@commitlint/config-conventional": "^12.1.1",
+        "@react-native-community/eslint-config": "^2.0.0",
+        "@types/react-native": "^0.64.0",
+        "@types/react-test-renderer": "^16.9.2",
+        "eslint": "^7.14.0",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "metro-react-native-babel-preset": "^0.64.0",
+        "react-test-renderer": "17.0.1",
+        "typescript": "^3.8.3",
+        "husky": "^6.0.0"
+    },
+    "resolutions": {
+        "@types/react": "^17"
+    }
+}
