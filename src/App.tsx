@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { activateKeepAwake } from 'expo-keep-awake';
-import parsePhoneNumber from 'libphonenumber-js';
 import React from 'react';
 import {
     Alert,
@@ -16,6 +15,7 @@ import {
     StarConnectionSettings,
     StarIO10Error,
     StarPrinter,
+    StarPrinterModel,
     StarXpandCommand,
 } from 'react-native-star-io10';
 import { RNEventSource } from 'rn-eventsource-reborn';
@@ -147,37 +147,42 @@ export default class App extends React.Component<Record<string, never>, AppState
         const printer = new StarPrinter(printerSettings);
 
         try {
-            const builder = new StarXpandCommand.StarXpandCommandBuilder().addDocument(
+            await printer.open();
+            const builder = new StarXpandCommand.StarXpandCommandBuilder();
+            builder.addDocument(
                 new StarXpandCommand.DocumentBuilder().addPrinter(
                     new StarXpandCommand.PrinterBuilder()
-                        .styleInternationalCharacter(
-                            StarXpandCommand.Printer.InternationalCharacterType.Usa,
-                        )
-                        .styleCharacterSpace(0)
-                        .styleAlignment(StarXpandCommand.Printer.Alignment.Center)
-                        .styleBold(true)
-                        .actionPrintText(`Order #${order.id}\n`)
-                        .actionPrintText(
-                            `Contact Phone Number: ${parsePhoneNumber(
-                                order.contactPhoneNumber,
-                            )?.formatInternational()}\n\n`,
-                        )
-                        .styleAlignment(StarXpandCommand.Printer.Alignment.Left)
-                        .actionPrintText('Products:\n')
-                        .styleBold(false)
-                        .actionPrintText(
-                            order.products
-                                .map((p) => `${p.title}\n${p.extras.map((e) => `\t${e.title}\n`)}`)
-                                .join('\n'),
-                        )
-                        .actionPrintText('\n')
-                        .styleAlignment(StarXpandCommand.Printer.Alignment.Right)
-                        .actionPrintText(new Date().toLocaleString())
+                        // .styleInternationalCharacter(
+                        //     StarXpandCommand.Printer.InternationalCharacterType.Usa,
+                        // )
+                        // .styleCharacterSpace(0)
+                        .actionPrintImage(new StarXpandCommand.Printer.ImageParameter('', 576))
+                        // .actionPrintQRCode(
+                        //     new StarXpandCommand.Printer.QRCodeParameter('Hello World.\n')
+                        //         .setModel(StarXpandCommand.Printer.QRCodeModel.Model2)
+                        //         .setLevel(StarXpandCommand.Printer.QRCodeLevel.L)
+                        //         .setCellSize(8),
+                        // )
+                        // .styleBold(true)
+                        // .actionPrintText('Test\n')
+                        // .actionPrintText(`Order #${order.id}\n`)
+                        // .actionPrintText(`Contact Phone Number: ${order.contactPhoneNumber}\n\n`)
+                        // .styleAlignment(StarXpandCommand.Printer.Alignment.Left)
+                        // .actionPrintText('Products:\n')
+                        // .styleBold(false)
+                        // .actionPrintText(
+                        //     order.products
+                        //         .map((p) => `${p.title}\n${p.extras.map((e) => `\t${e.title}\n`)}`)
+                        //         .join('\n'),
+                        // )
+                        // .actionPrintText('\n')
+                        // .styleAlignment(StarXpandCommand.Printer.Alignment.Right)
+                        // .actionPrintText(new Date().toLocaleString())
                         .actionCut(StarXpandCommand.Printer.CutType.Partial),
                 ),
             );
             const commands = await builder.getCommands();
-            await printer.open();
+
             await printer.print(commands);
         } catch (error) {
             if (error instanceof StarIO10Error) {

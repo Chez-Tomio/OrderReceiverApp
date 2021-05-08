@@ -1,4 +1,3 @@
-import { parsePhoneNumber } from 'libphonenumber-js';
 import React from 'react';
 import { Button, Text, View } from 'react-native';
 
@@ -15,8 +14,7 @@ export const OrdersListItem = React.memo<{
         <CollapsibleSection
             title={
                 <Text style={{ fontWeight: 'bold', fontSize: 24 }}>
-                    Order #{order.id} (
-                    {parsePhoneNumber(order.contactPhoneNumber)?.formatInternational()}) (
+                    Order #{order.id} ({order.contactPhoneNumber}) (
                     {new Date(order.time).toLocaleString()})
                 </Text>
             }
