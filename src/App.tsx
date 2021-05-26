@@ -146,38 +146,20 @@ export default class App extends React.Component<Record<string, never>, AppState
         printerSettings.identifier = this.state.settings.identifier;
         const printer = new StarPrinter(printerSettings);
 
+        const image = await fetch(
+            `${this.state.settings.url}/api/order-receiver-app/orders/${order.id}/image`,
+            {
+                headers: { Authorization: `Bearer ${this.state.settings.token}` },
+            },
+        ).then((res) => res.text());
+
         try {
             await printer.open();
             const builder = new StarXpandCommand.StarXpandCommandBuilder();
             builder.addDocument(
                 new StarXpandCommand.DocumentBuilder().addPrinter(
                     new StarXpandCommand.PrinterBuilder()
-                        // .styleInternationalCharacter(
-                        //     StarXpandCommand.Printer.InternationalCharacterType.Usa,
-                        // )
-                        // .styleCharacterSpace(0)
-                        .actionPrintImage(new StarXpandCommand.Printer.ImageParameter('', 576))
-                        // .actionPrintQRCode(
-                        //     new StarXpandCommand.Printer.QRCodeParameter('Hello World.\n')
-                        //         .setModel(StarXpandCommand.Printer.QRCodeModel.Model2)
-                        //         .setLevel(StarXpandCommand.Printer.QRCodeLevel.L)
-                        //         .setCellSize(8),
-                        // )
-                        // .styleBold(true)
-                        // .actionPrintText('Test\n')
-                        // .actionPrintText(`Order #${order.id}\n`)
-                        // .actionPrintText(`Contact Phone Number: ${order.contactPhoneNumber}\n\n`)
-                        // .styleAlignment(StarXpandCommand.Printer.Alignment.Left)
-                        // .actionPrintText('Products:\n')
-                        // .styleBold(false)
-                        // .actionPrintText(
-                        //     order.products
-                        //         .map((p) => `${p.title}\n${p.extras.map((e) => `\t${e.title}\n`)}`)
-                        //         .join('\n'),
-                        // )
-                        // .actionPrintText('\n')
-                        // .styleAlignment(StarXpandCommand.Printer.Alignment.Right)
-                        // .actionPrintText(new Date().toLocaleString())
+                        .actionPrintImage(new StarXpandCommand.Printer.ImageParameter(image, 576))
                         .actionCut(StarXpandCommand.Printer.CutType.Partial),
                 ),
             );
